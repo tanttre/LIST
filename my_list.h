@@ -7,8 +7,11 @@ class list
 public:
     list();
     ~list();
+
+    void pop_front();
     void push_back(T data);
-    int32_t GetSize() { return size; }
+    void clear();
+    int32_t size() { return size; }
     T& operator [] (const int index);
 private:
     template<class T>
@@ -23,7 +26,7 @@ private:
             this->pNext = pNext;
         }
     };
-    int32_t size;
+    uint32_t size;
     Node<T>* head;
 };
 
@@ -38,7 +41,16 @@ list<T>::list()
 template<class T>
 list<T>::~list()
 {
+    clear();
+}
 
+template<class T>
+void list<T>::pop_front()
+{
+    Node<T>* TEMP = head;
+    head = head->pNext;
+    delete TEMP;
+    --size;
 }
 
 template<class T>
@@ -61,6 +73,13 @@ void list<T>::push_back(T data)
 }
 
 template<class T>
+void list<T>::clear()
+{
+    while (size)
+        pop_front();
+}
+
+template<class T>
 T& list<T>::operator [] (const int index)
 {
     int32_t count = 0;
@@ -68,9 +87,7 @@ T& list<T>::operator [] (const int index)
     while (current != nullptr)
     {
         if (counter == index)
-        {
             return current->data;
-        }
         current = current->pNext;
         ++count;
     }
