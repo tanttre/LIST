@@ -11,7 +11,10 @@ public:
     void pop_front();
     void push_back(T data);
     void clear();
-    int32_t size() { return size; }
+    void push_front(T data);
+    void insert(T value, int32_t index);
+
+    size_t size() { return size };
     T& operator [] (const int index);
 private:
     template<class T>
@@ -26,10 +29,9 @@ private:
             this->pNext = pNext;
         }
     };
-    uint32_t size;
+    size_t size;
     Node<T>* head;
 };
-
 
 template<class T>
 list<T>::list()
@@ -64,9 +66,7 @@ void list<T>::push_back(T data)
     {
         Node<T>* current = this->head;
         while (current->pNext != nullptr)
-        {
             current = current->pNext;
-        }
         current->pNext = new Node<T>(data);
     }
     ++size;
@@ -82,7 +82,7 @@ void list<T>::clear()
 template<class T>
 T& list<T>::operator [] (const int index)
 {
-    int32_t count = 0;
+    size_t count = 0;
     Node<T>* current = this->head;
     while (current != nullptr)
     {
@@ -90,5 +90,30 @@ T& list<T>::operator [] (const int index)
             return current->data;
         current = current->pNext;
         ++count;
+    }
+}
+
+template<class T>
+void list<T>::push_front(T data)
+{
+    head = new Node<T>(data, head);
+    ++size;
+}
+
+template<class T>
+void list<T>::insert(T value, int32_t index)
+{
+    if (index == 0)
+    {
+        push_front(value);
+    }
+    else
+    {
+        Node<T>* previous = this->head;
+        for (size_t i = 0; i < index - 1; ++i)
+            previous = previous->pNext;
+        Node<T>* newNode = new Node<T>(value, previous->pNext)
+        previous->pNext = newNode;
+        ++size;
     }
 }
