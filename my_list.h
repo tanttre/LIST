@@ -13,6 +13,8 @@ public:
     void clear();
     void push_front(T data);
     void insert(T value, int32_t index);
+    void remove(int32_t index);
+    void pop_back();
 
     size_t size() { return size };
     T& operator [] (const int index);
@@ -112,8 +114,32 @@ void list<T>::insert(T value, int32_t index)
         Node<T>* previous = this->head;
         for (size_t i = 0; i < index - 1; ++i)
             previous = previous->pNext;
-        Node<T>* newNode = new Node<T>(value, previous->pNext)
-        previous->pNext = newNode;
+        previous->pNext = new Node<T>(value, previous->pNext);
         ++size;
     }
+}
+
+template<class T>
+void list<T>::remove(int32_t index)
+{
+    if (index == 0)
+    {
+        push_front();
+    }
+    else
+    {
+        Node<T>* previous = this->head;
+        for (size_t i = 0; i < index - 1; ++i)
+            previous = previous->pNext;
+        Node<T>* toDelete = previous->pNext;
+        previous->pNext = toDelete->pNext;
+        delete toDelete;
+        --size;
+    }
+}
+
+template<class T>
+void list<T>::pop_back()
+{
+    remove(size-1);
 }
